@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>廣興國小教師線上表單</title>
+  <style>
+    :root{
+      --bg:#eef5ef; --card:#fffef9; --text:#243228; --muted:#66756a;
+      --brand:#2f6b3c; --brand2:#4f8a5b; --line:#c9d7cb; --soft:#edf6ee;
+      --jungle-deep:#173d26; --jungle-mid:#3f7450; --jungle-light:#dcebdc;
+      --sand:#f4efdf;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 8% 12%, rgba(72,125,84,.14) 0 90px, transparent 92px),
+        radial-gradient(circle at 92% 18%, rgba(47,107,60,.12) 0 120px, transparent 122px),
+        radial-gradient(circle at 16% 88%, rgba(94,139,91,.10) 0 130px, transparent 132px),
+        linear-gradient(180deg,#edf5ee 0%,#f7f5ea 48%,#eef5ef 100%);
+      min-height:100vh;
+      position:relative;
+      overflow-x:hidden;
+    }
+    body:before,body:after{
+      content:"";position:fixed;z-index:-1;pointer-events:none;opacity:.22;
+      width:240px;height:420px;
+      background:
+        radial-gradient(ellipse at 38% 18%, #477b52 0 18px, transparent 19px),
+        radial-gradient(ellipse at 55% 28%, #6a966f 0 22px, transparent 23px),
+        radial-gradient(ellipse at 28% 40%, #376746 0 24px, transparent 25px),
+        radial-gradient(ellipse at 62% 52%, #7ea47e 0 20px, transparent 21px),
+        radial-gradient(ellipse at 35% 68%, #4e7f59 0 26px, transparent 27px);
+      transform:rotate(-13deg);
+    }
+    body:before{left:-70px;top:90px}
+    body:after{right:-80px;bottom:30px;transform:scaleX(-1) rotate(-13deg)}
+    header{
+      position:sticky;top:0;z-index:20;
+      background:linear-gradient(90deg,rgba(23,61,38,.98),rgba(47,107,60,.96));
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.1);
+      box-shadow:0 6px 18px rgba(28,64,39,.18)
+    }
+    .top{max-width:1200px;margin:auto;padding:14px 18px;display:flex;align-items:center;gap:14px;justify-content:space-between}
+    .title{font-weight:800;font-size:20px;color:#fff}.subtitle{font-size:12px;color:#dcebdc}
+    .layout{max-width:1200px;margin:22px auto;display:grid;grid-template-columns:260px 1fr;gap:20px;padding:0 18px}
+    nav{
+      background:linear-gradient(180deg,#fffef9 0%,#f6f7ee 100%);
+      border:1px solid #d8e1d5;border-radius:22px;padding:14px;height:max-content;
+      position:sticky;top:85px;
+      box-shadow:0 10px 28px rgba(37,75,46,.08)
+    }
+    nav button{width:100%;text-align:left;border:0;background:transparent;padding:12px 14px;border-radius:14px;margin:3px 0;cursor:pointer;font-weight:700;color:#38513f}
+    nav button:hover,nav button.active{
+      background:linear-gradient(90deg,#e7f3e7,#f5efe0);
+      color:var(--brand);
+      box-shadow:inset 4px 0 0 var(--brand)
+    }
+    .panel{
+      background:
+        linear-gradient(rgba(255,254,249,.96),rgba(255,254,249,.96)),
+        repeating-linear-gradient(0deg,rgba(61,105,72,.04) 0 1px,transparent 1px 5px);
+      border:1px solid #d8e1d5;border-radius:24px;padding:26px;
+      box-shadow:0 14px 34px rgba(32,72,43,.10);
+      position:relative;overflow:hidden
+    }
+    .panel:before{
+      content:"";position:absolute;right:-35px;top:-38px;width:160px;height:160px;
+      border-radius:50%;
+      background:
+        radial-gradient(ellipse at 35% 35%,rgba(70,125,80,.16) 0 28px,transparent 29px),
+        radial-gradient(ellipse at 65% 55%,rgba(93,143,96,.14) 0 34px,transparent 35px);
+      pointer-events:none
+    }
+    .form-page{display:none}.form-page.active{display:block}
+    h1{
+      font-size:25px;text-align:center;margin:4px 0 18px;color:var(--jungle-deep);
+      letter-spacing:.5px
+    }
+    h1:after{
+      content:"";display:block;width:76px;height:4px;border-radius:999px;margin:9px auto 0;
+      background:linear-gradient(90deg,#2f6b3c,#8db391,#d3b96e)
+    }
+    h2{font-size:18px;margin:22px 0 10px;color:var(--jungle-deep);border-left:5px solid #6b9b72;padding-left:10px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}.c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}.c3{grid-column:span 3}
+    label{font-size:13px;font-weight:700;color:#475569}
+    input,select,textarea{
+      width:100%;margin-top:5px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;
+      font:inherit;background:#fffefb;transition:.2s
+    }
+    input:focus,select:focus,textarea:focus{
+      outline:none;border-color:#6c9d72;box-shadow:0 0 0 3px rgba(79,138,91,.12)
+    }
+    textarea{min-height:88px;resize:vertical}
+    .inline{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.inline label{font-weight:500;color:var(--text)}
+    input[type=checkbox],input[type=radio]{width:auto;margin:0 4px 0 0}
+    table{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:13px}
+    th,td{border:1px solid #a9b9aa;padding:7px;vertical-align:top} th{background:#edf4e9;color:#2d4a34}
+    td input,td select,td textarea{border:0;border-bottom:1px dashed #cbd5e1;border-radius:0;padding:5px;margin:0;background:transparent}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+    .primary{background:linear-gradient(135deg,#2f6b3c,#4f8a5b);color:white;box-shadow:0 6px 14px rgba(47,107,60,.18)}
+    .secondary{background:#e9efe5;color:#35503c}
+    .danger{background:#f7e6df;color:#9d4738}
+    .note{
+      padding:12px 14px;background:linear-gradient(90deg,#eef6eb,#faf6e8);
+      border-left:4px solid var(--brand);font-size:13px;color:#4d6252;margin:12px 0;border-radius:0 12px 12px 0
+    }
+    .stamp-row{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #9fb09f;margin-top:16px;background:#fbfcf6}
+    .stamp{min-height:72px;border-right:1px solid #9fb09f;text-align:center;padding:8px;color:#35503c}.stamp:last-child{border-right:0}
+    .muted{color:var(--muted);font-size:12px}
+    .screen-only{}
+    @media(max-width:800px){
+      .layout{grid-template-columns:1fr}
+      nav{position:relative;top:0}
+      .grid{display:block}.grid>*{margin-bottom:10px}
+      .top{align-items:flex-start}.title{font-size:17px}
+      body:before,body:after{opacity:.12}
+    }
+    @media print{
+      @page{size:A4;margin:10mm}
+      body{background:#fff!important;font-size:10pt} body:before,body:after,.panel:before{display:none!important}
+      header,nav,.screen-only{display:none!important}
+      .layout{display:block;margin:0;padding:0;max-width:none}
+      .panel{border:0;box-shadow:none;padding:0}
+      .form-page{display:none!important}
+      .form-page.active{display:block!important}
+      input,select,textarea{border:0!important;background:transparent!important;padding:1px!important;appearance:none}
+      .panel h1{font-size:16pt;margin:0 0 8px}
+      table{font-size:8.5pt;margin:5px 0 8px}
+      th,td{padding:4px}
+      .stamp{min-height:48px}
+      .note{font-size:8.5pt;padding:5px;margin:5px 0}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div><div class="title">🌿 高雄市美濃區廣興國民小學｜教師線上表單</div><div class="subtitle">線上填寫・草稿自動保存在本機・列印／另存 PDF</div></div>
+    <button class="btn primary screen-only" onclick="window.print()">列印／另存 PDF</button>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="screen-only">
+  <button class="active" data-target="sub">01 調／代課單</button>
+  <button data-target="blueprint">02 試題分析雙向細目表</button>
+  <button data-target="review">03 評量試題審核表</button>
+  <button data-target="reflection">04 試題分析暨教學省思表</button>
+  <button data-target="patrol">05 巡堂紀錄表</button>
+  <hr style="border:0;border-top:1px solid #e5e7eb;margin:10px 0">
+  <button onclick="saveDraft()">💾 儲存草稿</button>
+  <button onclick="clearCurrent()">🧹 清除此表</button>
+</nav>
+
+<main class="panel">
+
+<section id="sub" class="form-page active">
+<h1>高雄市廣興國民小學【調／代課單】</h1>
+<div class="grid">
+<label class="c4">學年度<input name="sub_year"></label>
+<label class="c4">學期<select name="sub_sem"><option></option><option>第一學期</option><option>第二學期</option></select></label>
+<label class="c4">申請日期<input type="date" name="sub_date"></label>
+<label class="c6">申請人<input name="sub_applicant"></label>
+<label class="c6">調／代課原因<input name="sub_reason"></label>
+<div class="c12">
+<label>假別（有請假才需填寫）</label>
+<div class="inline">
+<label><input type="radio" name="sub_leave" value="事假">事假</label>
+<label><input type="radio" name="sub_leave" value="病假">病假</label>
+<label><input type="radio" name="sub_leave" value="公假">公假</label>
+<label><input type="radio" name="sub_leave" value="補休">補休</label>
+<label><input type="radio" name="sub_leave" value="其他">其他</label><input style="max-width:220px" name="sub_leave_other">
+</div>
+</div>
+<label class="c6">導師代理<input name="sub_homeroom"></label>
+<label class="c6">導護代理<input name="sub_duty"></label>
+</div>
+
+<h2>授課調整</h2>
+<table>
+<thead><tr><th>班級</th><th>課程科目</th><th colspan="3">原授課時間</th><th colspan="4">調整授課時間及科目</th><th>對調課務／代課教師簽名</th></tr>
+<tr><th></th><th></th><th>月日</th><th>星期</th><th>節次</th><th>月日</th><th>星期</th><th>節次</th><th>科目</th><th></th></tr></thead>
+<tbody id="subRows"></tbody>
+</table>
+<button class="btn secondary screen-only" onclick="addSubRow()">＋新增一列</button>
+<div class="note">1. 授課時間調整請送教務處教學組辦理。<br>2. 教師臨時申請調／代課請於三天前，事後補課請於銷假上課後三天內提出。<br>3. 會簽流程：申請者簽名 → 對調課務／代課老師簽名 → 教務組 → 教務主任 → 校長簽核。<br>4. 若有公文或證明文件，請附上。</div>
+<div class="stamp-row"><div class="stamp">申請者簽名</div><div class="stamp">教務組長</div><div class="stamp">教務主任</div><div class="stamp">校長</div></div>
+</section>
+
+<section id="blueprint" class="form-page">
+<h1>高雄市美濃區廣興國民小學 試題分析雙向細目表</h1>
+<div class="grid">
+<label class="c3">學年度<input name="bp_year"></label>
+<label class="c3">學期<select name="bp_sem"><option></option><option>第一學期</option><option>第二學期</option></select></label>
+<div class="c3"><label>評量</label><div class="inline"><label><input type="radio" name="bp_exam" value="期中">期中</label><label><input type="radio" name="bp_exam" value="期末">期末</label></div></div>
+<label class="c3">領域名稱<input name="bp_subject"></label>
+<label class="c4">年級<input name="bp_grade"></label>
+<label class="c4">命題教師<input name="bp_teacher"></label>
+<label class="c4">命題範圍<input name="bp_range" placeholder="第＿單元至第＿單元"></label>
+</div>
+
+<h2>單元名稱、主要概念及教材比例分佈</h2>
+<table><thead><tr><th>單元名稱</th><th>主要概念</th><th>上課節數</th><th>理想配分(%)</th><th>實際配分(%)</th></tr></thead><tbody id="bpUnitRows"></tbody></table>
+<button class="btn secondary screen-only" onclick="addBpUnitRow()">＋新增單元</button>
+<div class="note">理想配分＝各單元上課節數 ÷ 上課總節數；實際配分為該單元在試卷中所佔分數。原表說明：實際配分不應少於或多於理想配分 5 分以上。</div>
+
+<h2>試題分析雙向細目表</h2>
+<table><thead><tr><th>教材內容／單元</th><th>記憶 題號</th><th>了解 題號</th><th>應用 題號</th><th>高層次思考 題號</th><th>合計分數(題數)</th></tr></thead><tbody id="bpDetailRows"></tbody></table>
+<button class="btn secondary screen-only" onclick="addBpDetailRow()">＋新增單元</button>
+<div class="stamp-row"><div class="stamp">命題教師</div><div class="stamp">教務組</div><div class="stamp">教導主任</div><div class="stamp">校長</div></div>
+</section>
+
+<section id="review" class="form-page">
+<h1>高雄市廣興國小 教師命題自我檢核暨定期評量試題審核表</h1>
+<div class="grid">
+<label class="c3">學年度<input name="rv_year"></label><label class="c3">學期<input name="rv_sem"></label><label class="c3">年級<input name="rv_grade"></label><label class="c3">領域／科目<input name="rv_subject"></label>
+<label class="c6">版本<input name="rv_version"></label><label class="c6">命題範圍<input name="rv_range"></label>
+</div>
+<h2>教師命題自我檢核</h2>
+<table><thead><tr><th style="width:48px">編號</th><th>檢核內容</th><th>是</th><th>否</th></tr></thead><tbody id="selfCheck"></tbody></table>
+<label>直接引用比例（若適用）<input name="rv_quote_pct" placeholder="%"></label>
+<h2>教師審題檢核表</h2>
+<table><thead><tr><th style="width:48px">編號</th><th>檢核內容</th><th>是</th><th>否</th></tr></thead><tbody id="reviewCheck"></tbody></table>
+<label>其他建議事項<textarea name="rv_suggestion" placeholder="試題類型（含新增題型）的適切性、審題建議等"></textarea></label>
+<div class="note">◎請務必做到試題保密，秉持評量之公平性。</div>
+<div class="stamp-row"><div class="stamp">審題教師檢核簽名</div><div class="stamp">命題教師閱畢簽名</div><div class="stamp">教務主任</div><div class="stamp">校長</div></div>
+</section>
+
+<section id="reflection" class="form-page">
+<h1>高雄市美濃區廣興國民小學 學生評量試題分析暨教學省思表</h1>
+<div class="grid">
+<label class="c3">學年度<input name="rf_year"></label><label class="c3">學期<input name="rf_sem"></label><label class="c3">期別<input name="rf_term"></label><label class="c3">年班<input name="rf_class"></label>
+<label class="c4">評量人數<input type="number" name="rf_count"></label><label class="c4">評量日期<input type="date" name="rf_date"></label><label class="c4">評量領域<input name="rf_subject"></label>
+<label class="c12">評量範圍（單元或主題）<input name="rf_range"></label>
+</div>
+<h2>成績分布</h2>
+<table><thead><tr><th>分數</th><th>0</th><th>1-9</th><th>10-19</th><th>20-29</th><th>30-39</th><th>40-49</th><th>50-59</th><th>60-69</th><th>70-79</th><th>80-89</th><th>90-99</th><th>100</th></tr></thead>
+<tbody><tr><th>人數</th><td><input type="number" min="0" name="rf_score_0"></td><td><input type="number" min="0" name="rf_score_1"></td><td><input type="number" min="0" name="rf_score_2"></td><td><input type="number" min="0" name="rf_score_3"></td><td><input type="number" min="0" name="rf_score_4"></td><td><input type="number" min="0" name="rf_score_5"></td><td><input type="number" min="0" name="rf_score_6"></td><td><input type="number" min="0" name="rf_score_7"></td><td><input type="number" min="0" name="rf_score_8"></td><td><input type="number" min="0" name="rf_score_9"></td><td><input type="number" min="0" name="rf_score_10"></td><td><input type="number" min="0" name="rf_score_11"></td></tr></tbody></table>
+<label>需個別輔導之學生<textarea name="rf_students"></textarea></label>
+<label>需補充與回饋之教材<textarea name="rf_material"></textarea></label>
+<h2>試後分析與策進作法（分析錯誤人數最多的三題）</h2>
+<table><thead><tr><th>題號與試題內容</th><th>答題結果與錯題分析</th><th>改善策略</th></tr></thead>
+<tbody><tr><td><textarea name="rf_q1_q"></textarea></td><td><textarea name="rf_q1_a"></textarea></td><td><textarea name="rf_q1_s"></textarea></td></tr><tr><td><textarea name="rf_q2_q"></textarea></td><td><textarea name="rf_q2_a"></textarea></td><td><textarea name="rf_q2_s"></textarea></td></tr><tr><td><textarea name="rf_q3_q"></textarea></td><td><textarea name="rf_q3_a"></textarea></td><td><textarea name="rf_q3_s"></textarea></td></tr></tbody></table>
+<div><label>擬採補救教學方式</label><div class="inline">
+<label><input type="checkbox" name="rf_remedy" value="個別指導">個別指導</label>
+<label><input type="checkbox" name="rf_remedy" value="班親會協助指導">班親會協助指導</label>
+<label><input type="checkbox" name="rf_remedy" value="統一指導">統一指導</label>
+<label><input type="checkbox" name="rf_remedy" value="同儕協助">同儕協助</label>
+<label><input type="checkbox" name="rf_remedy" value="班群老師協助指導">班群老師協助指導</label>
+<label><input type="checkbox" name="rf_remedy" value="小組學習">小組學習</label>
+<label><input type="checkbox" name="rf_remedy" value="其他">其他</label></div></div>
+<label>教學與評量之省思<textarea name="rf_reflection"></textarea></label>
+<div class="stamp-row"><div class="stamp">教學者</div><div class="stamp">教學組長</div><div class="stamp">教務主任</div><div class="stamp">校長</div></div>
+</section>
+
+<section id="patrol" class="form-page">
+<h1>高雄市廣興國民小學 巡堂紀錄表</h1>
+<div class="grid">
+<label class="c3">日期<input type="date" name="pt_date"></label><label class="c3">星期<input name="pt_weekday"></label><label class="c3">第幾節<input name="pt_period"></label><label class="c3">第幾週<input name="pt_week"></label>
+<div class="c12 inline"><label><input type="checkbox" name="pt_unable">因公繁忙／請假無法巡堂</label></div>
+</div>
+<table><thead><tr><th>班級</th><th>科目</th><th>任課教師</th><th>巡堂記事</th><th>特殊狀況</th></tr></thead><tbody id="patrolRows"></tbody></table>
+<div class="stamp-row"><div class="stamp">巡堂人員</div><div class="stamp">教務主任</div><div class="stamp">校長</div><div class="stamp">備註</div></div>
+</section>
+
+<div class="actions screen-only">
+<button class="btn primary" onclick="window.print()">列印／另存 PDF</button>
+<button class="btn secondary" onclick="saveDraft()">儲存草稿</button>
+<button class="btn danger" onclick="clearCurrent()">清除此表</button>
+<span id="status" class="muted"></span>
+</div>
+</main>
+</div>
+
+<script>
+const selfItems=[
+"試題的設計是否依據教材內容及其知識結構來制定？",
+"試題是否平均涵蓋各學習內容的概念？",
+"試題是否注重概念原理的理解與應用？",
+"同一主題之題組是否已避免有過多的子題？",
+"試題內容是否直接引用坊間測驗卷、參考書、歷屆考古題、命題光碟等？",
+"試題是否出現有母子效應（互相牽涉）的情形？",
+"試題是否顧及難易度之合理性？",
+"相同教學單元之多個試題是否依教學目標做適當配置？"
+];
+const reviewItems=[
+"試題閱讀的難易度能配合學生程度。",
+"試題各單元之取材分布均勻，且包括教材之重要部分。",
+"試題能清楚表達題意，語法和標點符號皆正確。",
+"命題內容兼顧事實知識、概念知識、程序知識、後設認知知識等層面。",
+"試題能與學生的生活經驗相結合，避免艱深苦澀。",
+"試題確定只有一個最佳答案，不致引起爭議。",
+"有設計素養導向題型。",
+"每個試題只問一個獨立且明確的問題，無兩個以上不同觀念在同一題出現。",
+"題幹採用正面的敘述，無反面或雙重否定的文句；若用否定句，已在否定字眼下加註雙底線。",
+"選擇題題幹本身為完整敘述，無被選項分割成兩部分或段落之情形。",
+"選擇題少用「以上皆非」，且無使用「以上皆是」的答案之情形。",
+"各大題之正確答案無規律性。",
+"各選項字數相當，按邏輯排列，且非正確選項具誘答性。",
+"版面編排適宜（包括字型、字體、行距、作答空間……）。",
+"大部分學生能在 40 分鐘考試時間內完成這份試題。"
+];
+const classes=["一年忠班","一年孝班","二年忠班","三年忠班","四年忠班","四年孝班","五年忠班","五年孝班","六年忠班","六年孝班"];
+const subjects=["","國語","母語","英語","數學","生活","社會","自然","綜合","音樂","美勞","體育","健康","電腦","彈性"];
+const patrolNotes=["","教學正常","室外課","進行與課程無關之活動","教師遲到早退","上課狀況欠佳"];
+
+function addSubRow(v={}){document.querySelector("#subRows").insertAdjacentHTML("beforeend",`<tr>
+<td><input name="sub_class" value="${v.c||''}"></td><td><input name="sub_subject" value="${v.s||''}"></td>
+<td><input name="sub_old_date"></td><td><input name="sub_old_week"></td><td><input name="sub_old_period"></td>
+<td><input name="sub_new_date"></td><td><input name="sub_new_week"></td><td><input name="sub_new_period"></td><td><input name="sub_new_subject"></td><td style="height:44px"></td></tr>`)}
+function addBpUnitRow(){document.querySelector("#bpUnitRows").insertAdjacentHTML("beforeend",`<tr><td><input name="bp_unit"></td><td><textarea name="bp_concept"></textarea></td><td><input type="number" name="bp_hours"></td><td><input type="number" step="0.1" name="bp_ideal"></td><td><input type="number" step="0.1" name="bp_actual"></td></tr>`)}
+function addBpDetailRow(){document.querySelector("#bpDetailRows").insertAdjacentHTML("beforeend",`<tr><td><input name="bp_d_unit"></td><td><input name="bp_mem"></td><td><input name="bp_understand"></td><td><input name="bp_apply"></td><td><input name="bp_high"></td><td><input name="bp_total"></td></tr>`)}
+function buildChecks(id,items,prefix){document.querySelector(id).innerHTML=items.map((x,i)=>`<tr><td>${i+1}</td><td>${x}</td><td style="text-align:center"><input type="radio" name="${prefix}_${i}" value="是"></td><td style="text-align:center"><input type="radio" name="${prefix}_${i}" value="否"></td></tr>`).join("")}
+function buildPatrol(){document.querySelector("#patrolRows").innerHTML=classes.map((c,i)=>`<tr><th>${c}</th><td><select name="pt_subject_${i}">${subjects.map(s=>`<option>${s}</option>`).join("")}</select></td><td><input name="pt_teacher_${i}"></td><td><select name="pt_note_${i}">${patrolNotes.map(s=>`<option>${s}</option>`).join("")}</select></td><td><textarea name="pt_special_${i}"></textarea></td></tr>`).join("")}
+
+document.querySelectorAll("nav button[data-target]").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll("nav button[data-target]").forEach(x=>x.classList.remove("active")); b.classList.add("active");
+ document.querySelectorAll(".form-page").forEach(x=>x.classList.remove("active")); document.getElementById(b.dataset.target).classList.add("active");
+ localStorage.setItem("gs_active",b.dataset.target);
+}));
+function allFields(){return [...document.querySelectorAll("input,select,textarea")]}
+function saveDraft(){
+ const data={}; allFields().forEach((el,i)=>{const k=el.name||("anon_"+i); if(el.type==="checkbox"){(data[k]??=[]).push(el.checked?el.value||true:false)} else if(el.type==="radio"){if(el.checked)data[k]=el.value} else{(data[k]??=[]).push(el.value)}});
+ localStorage.setItem("gs_forms",JSON.stringify(data)); document.getElementById("status").textContent="已儲存草稿 "+new Date().toLocaleTimeString();
+}
+function loadDraft(){
+ const raw=localStorage.getItem("gs_forms"); if(!raw)return; const d=JSON.parse(raw); const counts={};
+ allFields().forEach((el,i)=>{const k=el.name||("anon_"+i); counts[k]=(counts[k]||0); const idx=counts[k]++;
+   if(el.type==="checkbox"){const arr=d[k]||[]; el.checked=!!arr[idx]}
+   else if(el.type==="radio"){el.checked=d[k]===el.value}
+   else if(Array.isArray(d[k])){el.value=d[k][idx]??""}
+ });
+}
+function clearCurrent(){
+ if(!confirm("確定清除目前表單內容？"))return;
+ const page=document.querySelector(".form-page.active"); page.querySelectorAll("input,select,textarea").forEach(el=>{if(el.type==="checkbox"||el.type==="radio")el.checked=false;else el.value=""}); saveDraft();
+}
+document.addEventListener("input",()=>{clearTimeout(window._t);window._t=setTimeout(saveDraft,600)});
+for(let i=0;i<6;i++)addSubRow(); for(let i=0;i<5;i++)addBpUnitRow(); for(let i=0;i<5;i++)addBpDetailRow();
+buildChecks("#selfCheck",selfItems,"self"); buildChecks("#reviewCheck",reviewItems,"review"); buildPatrol();
+loadDraft();
+const active=localStorage.getItem("gs_active"); if(active){const b=document.querySelector(`nav button[data-target="${active}"]`); if(b)b.click();}
+</script>
+</body>
+</html>
